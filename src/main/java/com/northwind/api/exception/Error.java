@@ -1,12 +1,9 @@
 package com.northwind.api.exception;
 
+import java.time.LocalDateTime;
 import org.apache.logging.log4j.util.Strings;
 
-import java.io.Serializable;
-import java.time.Instant;
-
-
-public class Error implements Serializable{
+public class Error {
 
   private static final long serialVersionUID = 1L;
   /** Application error code, which is different from HTTP error code. */
@@ -25,7 +22,7 @@ public class Error implements Serializable{
   private String reqMethod = "Not available";
 
   /** Timestamp */
-  private Instant timestamp;
+  private LocalDateTime timestamp;
 
   public String getErrorCode() {
     return errorCode;
@@ -73,11 +70,11 @@ public class Error implements Serializable{
     return this;
   }
 
-  public Instant getTimestamp() {
+  public LocalDateTime getTimestamp() {
     return timestamp;
   }
 
-  public Error setTimestamp(Instant timestamp) {
+  public Error setTimestamp(LocalDateTime timestamp) {
     this.timestamp = timestamp;
     return this;
   }
