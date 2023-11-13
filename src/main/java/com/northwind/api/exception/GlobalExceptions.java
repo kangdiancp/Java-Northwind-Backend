@@ -1,9 +1,7 @@
 package com.northwind.api.exception;
 
-
 import java.time.LocalDateTime;
 import java.util.Locale;
-
 
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -26,6 +24,20 @@ public class GlobalExceptions {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleAllExceptionMethod(MethodArgumentNotValidException ex, WebRequest requset) {
         return ResponseEntity.badRequest().body(ex.getBindingResult().getAllErrors());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> handleException(
+            HttpServletRequest request, Exception ex, Locale locale) {
+
+        Error error = ErrorUtils.createError(
+                ex.getMessage(),
+                ex.getLocalizedMessage(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .setUrl(request.getRequestURL().toString())
+                .setReqMethod(request.getMethod())
+                .setTimestamp(LocalDateTime.now());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(BindException.class)
@@ -67,17 +79,4 @@ public class GlobalExceptions {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleException(
-            HttpServletRequest request, Exception ex, Locale locale) {
-
-        Error error = ErrorUtils.createError(
-                ex.getMessage(),
-                ex.getLocalizedMessage(),
-                HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .setUrl(request.getRequestURL().toString())
-                .setReqMethod(request.getMethod())
-                .setTimestamp(LocalDateTime.now());
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-    }
 }
